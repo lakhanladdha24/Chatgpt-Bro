@@ -77,7 +77,7 @@ A full-stack AI agent project using React, Node.js, Express, MongoDB, and the Go
 
 ### Frontend Deployment (Vercel)
 1. Go to your frontend code, specifically `frontend/src/api.js`.
-2. Update the `API_URL` variable to your new Render backend URL (e.g., `https://your-backend.onrender.com/api/chat`). Or, strictly use Vercel environment variables directly.
+2. Update the `VITE_API_URL` environment variable on Vercel to your new Render backend URL (e.g., `https://your-backend.onrender.com`). The application now handles adding the `/api` prefix automatically.
 3. Push these changes to your GitHub repository.
 4. Go to [Vercel](https://vercel.com/), sign in, and click **Add New > Project**.
 5. Import your GitHub repository.

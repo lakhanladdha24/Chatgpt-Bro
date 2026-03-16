@@ -1,6 +1,20 @@
 // api.js
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const getApiUrl = () => {
+    let url = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+    // Remove trailing slash if present
+    if (url.endsWith('/')) {
+        url = url.slice(0, -1);
+    }
+    // Ensure it ends with /api if it doesn't already
+    // This handles cases where the user might provide just the base domain
+    if (!url.endsWith('/api')) {
+        url = `${url}/api`;
+    }
+    return url;
+};
+
+const API_URL = getApiUrl();
 
 export const registerUser = async (email, password) => {
     const res = await fetch(`${API_URL}/auth/register`, {

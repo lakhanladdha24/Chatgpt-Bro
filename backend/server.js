@@ -22,6 +22,12 @@ app.get('/', (req, res) => {
     res.send('ChatGPT Bro Backend is running!');
 });
 
+// Generic error handler
+app.use((err, req, res, next) => {
+    console.error('Unhandled Error:', err);
+    res.status(500).json({ error: 'Internal Server Error', message: err.message });
+});
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/chatgpt-bro')
     .then(() => {

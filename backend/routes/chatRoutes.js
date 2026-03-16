@@ -133,7 +133,7 @@ router.post('/', async (req, res) => {
             return;
         }
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash', systemInstruction: SYSTEM_PROMPT });
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash', systemInstruction: SYSTEM_PROMPT });
 
         const history = chat.messages
             .filter(m => m.role !== 'system')
