@@ -166,7 +166,21 @@ router.post('/', async (req, res) => {
 
     } catch (error) {
         console.error("Chat Error:", error);
-        res.write(`data: ${JSON.stringify({ error: 'Something went wrong processing your message.' })}\n\n`);
+        
+        let clientMessage = 'Something went wrong processing your message.';
+        
+        // Check for specific Gemini errors to give the user better feedback
+        if (error.status === 429) {
+            clientMessage = 'The AI is currently busy (Too Many Requests). Please try again in a moment.';
+        } else if (error.status === 404) {
+            clientMessage = 'The AI model was not found. Please check the backend configuration.';
+        } else if (error.message && error.message.includes('API key')) {
+            clientMessage = 'Invalid API key. Please check your Gemini API configuration.';
+        } else if (error.name && (error.name.includes('Mongo') || error.name.includes('Mongoose'))) {
+            clientMessage = 'Database connection error. Please try again later.';
+        }
+
+        res.write(`data: ${JSON.stringify({ error: clientMessage })}\n\n`);
         res.end();
     }
 });
