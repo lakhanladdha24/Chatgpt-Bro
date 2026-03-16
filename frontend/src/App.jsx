@@ -7,7 +7,19 @@ import Auth from './Auth';
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [currentChatId, setCurrentChatId] = useState(null);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Default to closed on mobile
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth <= 768;
+            setIsMobile(mobile);
+            if (!mobile) setIsSidebarOpen(true);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -26,10 +38,12 @@ function App() {
 
     const handleSelectChat = (chatId) => {
         setCurrentChatId(chatId);
+        if (isMobile) setIsSidebarOpen(false);
     };
 
     const handleNewChat = () => {
         setCurrentChatId(null);
+        if (isMobile) setIsSidebarOpen(false);
     };
 
     const handleChatCreated = (newChatId) => {
@@ -50,8 +64,11 @@ function App() {
                             isAuthenticated ? (
                                 <div className="layout">
                                     <button className="mobile-toggle" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-                                        ☰
+                                        {isSidebarOpen ? '✕' : '☰'}
                                     </button>
+                                    {isMobile && isSidebarOpen && (
+                                        <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+                                    )}
                                     <div className={`sidebar-container ${isSidebarOpen ? 'open' : ''}`}>
                                         <Sidebar
                                             currentChatId={currentChatId}
